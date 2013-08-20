@@ -6,3 +6,12 @@
 *
 * The main header file for the Clixx library.
 *--------------------------------------------------------------------------*/
+#ifndef __CLIXX_H
+#define __CLIXX_H
+
+// Just include things in the right order
+#include <dock.h>
+#include <boards/common.h>
+#include <docks.h>
+
+#endif /* __CLIXX_H */

@@ -65,5 +65,6 @@ AC_SUBST(TARGET_RASPI)
 
 AC_OUTPUT(
   Makefile
+  src/Makefile
   )
 
