@@ -1,6 +1,9 @@
 # Editor files.
 *~
 # Autotools files.
+Makefile
+config.status
+libtool
 Makefile.in
 aclocal.m4
 autom4te.cache/
