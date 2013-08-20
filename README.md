@@ -1,4 +1,4 @@
-clixxlib
+ClixxLib
 ========
 
 A portable C++ library for interfacing with Clixx.IO docks and peripherals.
