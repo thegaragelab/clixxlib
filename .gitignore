@@ -1,12 +1,18 @@
 # Editor files.
 *~
+# Compiler generated files
+*.o
+*.l[oa]
 # Autotools files.
 Makefile
+config.log
 config.status
 libtool
 Makefile.in
 aclocal.m4
-autom4te.cache/
-config/
+autom4te.cache
+config
 configure
-m4/
+m4
+.libs
+.deps
