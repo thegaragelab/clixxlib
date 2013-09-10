@@ -109,48 +109,35 @@ class Dock {
      */
     Dock(DockInfo *pDockInfo);
 
-    /** Set up the Dock
-     *
-     * This function is required to setup the hardware interface for the
-     * defined Dock. Implementations of this function are found in the
-     * source for board definitions.
-     *
-     * @return true if the setup procedure succeeded, false if it failed.
-     */
-    virtual bool Setup() = 0;
+  public:
+    //-----------------------------------------------------------------------
+    // Dock access methods
+    //-----------------------------------------------------------------------
 
     /** Initialise the Dock
      *
-     * Initialises the Dock after the hardware setup has been completed. The
-     * Setup() method is called from the base constructor, the Init() method
-     * must be explicitly called from the child class constructor.
-     *
-     * If implemented the parent implementation of Init() must be called
-     * prior to performing any local initialisation. This method is mainly
-     * implemented by module child classes.
+     * Initialises the Dock by setting up the hardware. This method must
+     * be called first, all other access methods will fail if a successful
+     * call to init has not been made.
      *
      * @return true if the initialisation succeeded, false if it failed.
      */
-    virtual bool Init();
+    virtual bool init();
 
-    /** Clean up the Dock
+    /** Read a value from the Dock
      *
+     * Read a value from the Dock. The meaning of the return value will
+     * differ according to the dock type.
+     *
+     * @return the value read from the Dock.
      */
-    virtual void Cleanup();
+    virtual uint16_t read();
 
-  public:
-    //-----------------------------------------------------------------------
-    // Cleanup
-    //-----------------------------------------------------------------------
-
-    /** Destructor
+    /** Write a value to the Dock
      *
-     * The destructor simply calls the Cleanup() method defined by the child
-     * class to do whatever is needed to disable the Dock.
-     *
-     * @see Dock::Cleanup
+     * @param value the value to write to the Dock.
      */
-    virtual ~Dock();
+    virtual void write(uint16_t value);
 
     //-----------------------------------------------------------------------
     // Informational methods
