@@ -10,8 +10,7 @@
 #define __CLIXX_H
 
 // Just include things in the right order
-#include <dock.h>
-#include <boards/common.h>
-#include <docks.h>
+#include <clixx/base.h>
+#include <clixx/boards.h>
 
 #endif /* __CLIXX_H */

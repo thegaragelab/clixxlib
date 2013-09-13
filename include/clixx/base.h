@@ -4,10 +4,10 @@
 *---------------------------------------------------------------------------*
 * 20-Aug-2013 ShaneG
 *
-* Defines the base Dock class.
+* Defines the base classes.
 *--------------------------------------------------------------------------*/
-#ifndef __DOCK_H
-#define __DOCK_H
+#ifndef __CLIXX_BASE_H
+#define __CLIXX_BASE_H
 
 // Do some sanity checking
 #ifndef __CLIXX_H
@@ -203,4 +203,4 @@ class Tab {
   };
 
 
-#endif /* __DOCK_H */
+#endif /* __CLIXX_BASE_H */
