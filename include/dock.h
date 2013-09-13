@@ -14,10 +14,9 @@
 #  error "Do not include this file directly. Include <clixx.h> instead."
 #endif
 
-/** This class is the base for all types of Dock instances.
- *
+/** Represents a single Slot containing a Tab
  */
-class Dock {
+class Slot {
   public:
     /** Defines the supported voltage levels.
      *
@@ -72,48 +71,98 @@ class Dock {
       TwinTab,       //!< A TwinTab (5 pin) dock
       };
 
-    /** Defines a structure defining basic information about a Dock
-     *
+    /** A single structure containing information about a slot
      */
-    struct DockInfo {
-      Size        m_size;      //!< The size of the dock
-      Type        m_type;      //!< The type of the dock
-      Level       m_level;     //!< The voltage level(s) supported
-      const void *m_pHardware; //!< Hardware details about the dock
+    struct SlotInfo {
+      Level m_level; //! Supported voltage levels
+      Type  m_type;  //! The slot type
+      Size  m_size;  //! The size of the slot
       };
-
-  protected:
-    //--- Instance variables
-    const DockInfo *m_pDockInfo;  //!< Information about this dock
-    bool            m_bAvailable; //!< Set to 'true' if the dock is usable
-
-  protected:
-    //-----------------------------------------------------------------------
-    // Construction and initialisation
-    //-----------------------------------------------------------------------
-
-    /** Constructor
-     *
-     * The constructor for a generic Dock saves the internal state and then
-     * calls the Setup() method implemented by the child class.
-     *
-     * Please note that the Setup() method is called before the code for the
-     * child class constructor is executed. The Init() method is provided as
-     * a way of doing post construction initialisation. It should be the
-     * last method called by the constructor implementation of child classes.
-     *
-     * @see Dock::Setup
-     * @see Dock::Init
-     *
-     * @param pDockInfo information about the Dock being initialised.
-     */
-    Dock(DockInfo *pDockInfo);
 
   public:
     //-----------------------------------------------------------------------
-    // Dock access methods
+    // Informational methods
     //-----------------------------------------------------------------------
 
+    /** Get information about this Slot
+     *
+     * @return a SlotInfo structure describing the properties of this Slot
+     */
+    virtual SlotInfo *getSlotInfo() = 0;
+
+    /** Get the type of this Slot
+     *
+     * @return the type of this slot (one of the Slot::Type constants)
+     */
+    inline Type getType() {
+      return getSlotInfo()->m_type;
+      }
+
+    /** Get the size of this Slot
+     *
+     * @return the size of this slot (one of the Slot::Size constants)
+     */
+    inline Size getSize() {
+      return getSlotInfo()->m_size;
+      }
+
+    //-----------------------------------------------------------------------
+    // Read/Write operations
+    //-----------------------------------------------------------------------
+
+    /** Read data from a Slot
+     *
+     * Read the current value of the input pin of this slot. The value returned
+     * is always a 16 bit unsigned value, the actual meaning of the value
+     * depends on the type of the Slot.
+     *
+     * For a digital slot the value is either 0 or 1, for analog it is the
+     * current ADC value and for communications slots (I2C, SPI or Serial)
+     * it will be the next byte of data.
+     *
+     * @return the value read from the input pin.
+     */
+    virtual uint16_t read() = 0;
+
+    /** Write data to a Slot
+     *
+     * Write a new value to the output pin of this slot. The interpretation of
+     * the value depends on the type of the Slot being implemented.
+     *
+     * For a digital slot the output will be set low if the value is 0 and set
+     * high for any other value. For an analog slot the data will be written
+     * to the DAC (or PWM) channel. For communications slots (I2C, SPI or Serial)
+     * the least significant 8 bits will be sent as a single data byte.
+     *
+     * @param value the value to write to the slot.
+     */
+    virtual bool write(uint16_t value) = 0;
+
+    /** Read data from the 'extra' pin on a TwinTab Slot
+     *
+     * Read the current value of the extra pin of this slot. The extra pin is
+     * always a digital pin. The value returned is either 0 or 1.
+     *
+     * @return the value read from the extra pin.
+     */
+    virtual uint16_t readExtra() = 0;
+
+    /** Write data to the 'extra' pin on a TwinTab Slot
+     *
+     * Write a value to the extra pin of this slot. The extra pin is always
+     * digital, the output will be set low if the value is 0 and set high for
+     * any other value.
+     *
+     * @param value the value to write to the slot.
+     */
+    virtual bool writeExtra(uint16_t value) = 0;
+  };
+
+/** This class is the base for all types of Dock instances.
+ *
+ */
+class Dock {
+  public:
     /** Initialise the Dock
      *
      * Initialises the Dock by setting up the hardware. This method must
@@ -122,57 +171,36 @@ class Dock {
      *
      * @return true if the initialisation succeeded, false if it failed.
      */
-    virtual bool init();
+    virtual bool init() = 0;
 
-    /** Read a value from the Dock
+    /** Get the number of slot's available
      *
-     * Read a value from the Dock. The meaning of the return value will
-     * differ according to the dock type.
-     *
-     * @return the value read from the Dock.
+     * @return the number of slots available
      */
-    virtual uint16_t read();
+    virtual int getSlots() = 0;
 
-    /** Write a value to the Dock
-     *
-     * @param value the value to write to the Dock.
+    /** Get a reference to a specific slot
      */
-    virtual void write(uint16_t value);
-
-    //-----------------------------------------------------------------------
-    // Informational methods
-    //-----------------------------------------------------------------------
-
-    /** Is this dock usable ?
-     *
-     */
-    inline bool isUsable() {
-      return m_bAvailable;
-      }
-
-    /** Determine if the voltage level is supported
-     *
-     */
-    inline bool isLevelSupported(Level level) {
-      if((m_pDockInfo->m_level&level)==level)
-        return true;
-      return false;
-      }
-
-    /** Get the type of the dock
-     *
-     */
-    inline Type getType() {
-      return m_pDockInfo->m_type;
-      }
-
-    /** Get the size of the dock
-     *
-     */
-    inline Size getSize() {
-      return m_pDockInfo->m_size;
-      }
+    virtual Slot& getSlot(int slotNumber) = 0;
 
   };
+
+/** Every platform provides a default Dock instance */
+extern Dock SystemDock;
+
+/** Represents a single Tab or peripheral board
+ */
+class Tab {
+  public:
+    /** Get the SlotInfo structure describing the type of Slot required.
+     */
+    virtual SlotInfo *getRequiredSlotInfo() = 0;
+
+    /** Attach this Tab to a Slot
+     */
+    virtual bool attach(Slot &slot) = 0;
+
+  };
+
 
 #endif /* __DOCK_H */
