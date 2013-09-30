@@ -2,7 +2,8 @@
 #----------------------------------------------------------------------------
 # SmartDock (RS232 based dock) interface.
 #----------------------------------------------------------------------------
-from clixxbase import Dock
+import serial
+from clixxbase import Dock, Slot
 
 class SmartDock(Dock):
   pass

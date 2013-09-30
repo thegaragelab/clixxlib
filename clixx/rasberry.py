@@ -2,7 +2,8 @@
 #----------------------------------------------------------------------------
 # Raspberry Pi interface.
 #----------------------------------------------------------------------------
-from clixxbase import Dock
+import wiringpi2
+from clixxbase import Dock, Slot
 
 # Requires RPi.GPIO (https://pypi.python.org/pypi/RPi.GPIO)
 
