@@ -135,22 +135,64 @@ class Slot:
   def read(self):
     """ Read a single value from the slot
     """
-    raise ClixxException("Not yet implemented.")
-
-  def read_data(self, data, offset, length):
-    """ Read a sequence of data from the slot
-    """
-    raise ClixxException("Not yet implemented.")
+    raise ClixxException("Not implemented.")
 
   def write(self, data):
     """ Write a single value to the slot
     """
-    raise ClixxException("Not yet implemented.")
+    raise ClixxException("Not implemented.")
+
+class SerialSlot(Slot):
+  """ Extends slot functionality to support serial (SPI and RS232) connections.
+  """
+
+  #--------------------------------------------------------------------------
+  # Interface methods
+  #--------------------------------------------------------------------------
+
+  def read_data(self, data, offset, length):
+    """ Read a sequence of data from the slot
+    """
+    raise ClixxException("Not implemented.")
 
   def write_data(self, data, offset, length):
     """ Write a sequence of data to the slot
     """
-    raise ClixxException("Not yet implemented.")
+    raise ClixxException("Not implemented.")
+
+class TwoWireSlot(Slot):
+  """ Extends Slot to support I2C connections.
+  """
+
+  #--------------------------------------------------------------------------
+  # Interface methods
+  #--------------------------------------------------------------------------
+
+  def connect(self, device):
+    """ Attach the slot to a given device ID
+    """
+    raise ClixxException("Not implemented.")
+
+  def read8(self, register):
+    """ Read the value of an 8 bit register
+    """
+    raise ClixxException("Not implemented.")
+
+  def write8(self, register, value):
+    """ Write the value of an 8 bit register
+    """
+    raise ClixxException("Not implemented.")
+
+  def read16(self, register):
+    """ Read the value of an 16 bit register
+    """
+    raise ClixxException("Not implemented.")
+
+  def write16(self, register, value):
+    """ Write the value of an 16 bit register
+    """
+    raise ClixxException("Not implemented.")
+
 
 class Tab:
   """ A Tab is a peripheral hardware board attached to a Slot.
