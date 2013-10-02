@@ -3,7 +3,7 @@
 # Raspberry Pi interface.
 #----------------------------------------------------------------------------
 import wiringpi2
-from clixxbase import Dock, Slot, SerialSlot, TwoWireSlot
+from clixxbase import ClixxException, Dock, Slot, SerialSlot, TwoWireSlot
 
 #----------------------------------------------------------------------------
 # Slot implementations
@@ -75,6 +75,9 @@ SLOTS = {
 #----------------------------------------------------------------------------
 
 class RaspberryDock(Dock):
+  """ Implements the Raspberry Pi hardware Dock on GPIO pins.
+  """
+
   def setup(self, **kwargs):
     """ Initialise this particular Dock instance
     """
