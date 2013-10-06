@@ -3,6 +3,7 @@
 # Compiler generated files
 *.o
 *.l[oa]
+*.pyc
 # Autotools files.
 Makefile
 config.log
